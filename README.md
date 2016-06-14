@@ -1,4 +1,4 @@
-# JSproject
+# Ascension
 
 Ascension will be a stylish, relaxing 'platform jumper' type game roughly based on 'Winter Bells'. It will become increasingly challenging as the player progresses.
 
