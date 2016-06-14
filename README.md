@@ -9,16 +9,16 @@ Ascension will be a stylish, relaxing 'platform jumper' type game roughly based 
 - Mouse controlled movement
 
 ## Phases ##
-1. ### Day 1 ###
+### Day 1 ###
 - File Structure
 - Starting Modal
 - Begin creation of game models and basic physics
 
-2. ### Day 2 ###
+### Day 2 ###
 - Finish gameplay
 - Add score keeping
 - Add scaling difficulty
 
-3. ### Day 3 ###
+### Day 3 ###
 - Beautification
 - Sound FX? 
