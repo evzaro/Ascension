@@ -1,9 +1,13 @@
 canvas {
-  position: absolute;
   padding: 5px;
   border: 5px solid black;
   display: block;
   margin: auto;
   cursor: none;
   background: transparent;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
 }

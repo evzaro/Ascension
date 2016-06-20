@@ -46,7 +46,7 @@
 
 	var PlayerModel = __webpack_require__(1);
 	var BellModel = __webpack_require__(2);
-	var Background = __webpack_require__(3);
+	var Background = __webpack_require__(4);
 	
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
@@ -56,7 +56,7 @@
 	var currentBellPointVal = 10;
 	var bells = [];
 	
-	var Sounds = __webpack_require__(5);
+	var Sounds = __webpack_require__(3);
 	var soundStore = new Sounds();
 	soundStore.music.play();
 	
@@ -275,7 +275,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Sounds = __webpack_require__(5);
+	var Sounds = __webpack_require__(3);
 	
 	var soundStore = new Sounds();
 	
@@ -316,9 +316,26 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	var Sounds = function() {
+	
+		this.chime = new Audio();
+		this.chime.src = "./audio/chime.wav";
+	  this.music = new Audio();
+	  this.music.src = "./audio/music.wav";
+	  this.music.loop = true;
+	
+	};
+	
+	module.exports = Sounds;
+
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Images = __webpack_require__(4);
+	var Images = __webpack_require__(5);
 	
 	var imageStore = new Images();
 	function Background() {
@@ -346,7 +363,7 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	var Images = function() {
@@ -356,23 +373,6 @@
 	};
 	
 	module.exports = Images;
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	var Sounds = function() {
-	
-		this.chime = new Audio();
-		this.chime.src = "./audio/chime.wav";
-	  this.music = new Audio();
-	  this.music.src = "./audio/music.wav";
-	  this.music.loop = true;
-	
-	};
-	
-	module.exports = Sounds;
 
 
 /***/ }
