@@ -53,6 +53,7 @@
 	
 	var player = new PlayerModel(canvas, gameOver);
 	var score = 0;
+	var high_score = 0;
 	var currentBellPointVal = 10;
 	var bells = [];
 	
@@ -69,7 +70,7 @@
 	
 	var makeNewBell = function () {
 		if (player.dead === false) {
-	  	bells.push(new BellModel(canvas));
+	  	bells.push(new BellModel(canvas, score));
 		}
 	};
 	
@@ -110,12 +111,12 @@
 		      if (checkCollision(bells[i])){
 						player.startedAscent = true;
 		        bells.splice(i, 1);
-		        if ( (canvas.height-player.playerRadius + player.playerY) > canvas.height * 0.2){
+		        if ( (canvas.height-player.playerRadius + player.playerY) > canvas.height * 0.3){
 		          player.handleJump();
 		        }
 		      }
 				} else {
-					if (player.playerY > -230){
+					if (player.playerY > -220){
 						player.playerY += -0.15;
 					}
 					bells[i].fallSpeed = -5;
@@ -125,7 +126,8 @@
 	    }
 	  }
 	
-	  if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.2){
+	  if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.3){
+	
 	    player.jumpVelocity = player.jumpVelocity/1.3;
 	    bells.forEach(function(bell){
 	      bell.startShift();
@@ -135,16 +137,18 @@
 	      bell.endShift();
 	    });
 	  }
-	
+	ctx.fillText(score, 5, 15);
 	}
 	
 	function gameOver (){
 		window.clearInterval(bellMaker);
 		window.clearInterval(mainDraw);
+		if (high_score < score){
+			high_score = score;
+		}
 		drawGameOver();
 		canvas.addEventListener('click', run, false);
 		player = new PlayerModel(canvas, gameOver);
-		console.log(background);
 		score = 0;
 		currentBellPointVal = 10;
 		bells = [];
@@ -157,25 +161,27 @@
 			ctx.fillStyle = 'black';
 	    ctx.fillRect(0,0,canvas.width, canvas.height);
 			ctx.fillStyle = 'white';
+			ctx.font = "70px comic-sans";
+			ctx.fillText("Bunny Munchies", 150, 55);
 			ctx.font = "30px comic-sans";
-			ctx.fillText("Ascension", 35, 30);
-			ctx.font = "30px comic-sans";
-		  ctx.fillText("Try to get the high-score by bouncing on the snowflakes!", 35, 200);
-			ctx.font = "15px comic-sans";
-			ctx.fillText("Click anywhere to begin", 35, 300);
+		  ctx.fillText("Try to get the high-score by eating all the fruits and veggies!", 15, 200);
+			ctx.font = "20px comic-sans";
+			ctx.fillText("Click anywhere to begin", 80, 300);
 	}
 	
 	function drawGameOver() {
 			ctx.fillStyle = 'black';
 	    ctx.fillRect(0,0,canvas.width, canvas.height);
 			ctx.fillStyle = 'white';
+			ctx.font = "70px comic-sans";
+			ctx.fillText("GAME OVER", 150, 55);
 			ctx.font = "30px comic-sans";
-			ctx.fillText("GAME OVER", 35, 30);
-			ctx.fillText("Your score was " + score, 35, 100);
+			ctx.fillText("Your score: " + score, 35, 140);
+			ctx.fillText("Your high score: " + high_score, 35, 180);
 			ctx.font = "30px comic-sans";
-		  ctx.fillText("Try again?", 35, 250);
+	
 			ctx.font = "15px comic-sans";
-			ctx.fillText("Click anywhere to begin", 35, 300);
+			ctx.fillText("Click anywhere to try again", 35, 300);
 	
 	}
 	
@@ -183,9 +189,8 @@
 	canvas.addEventListener('click', run, false);
 	
 	function run(){
-		console.log(background);
 		canvas.removeEventListener('click', run, false);
-		bellMaker = window.setInterval(makeNewBell, 340);
+		bellMaker = window.setInterval(makeNewBell, 380);
 		mainDraw = window.setInterval(draw, 10);
 	}
 
@@ -275,7 +280,7 @@
 	
 	PlayerModel.prototype.handleDeath = function () {
 	  this.dead = true;
-	  window.setTimeout(this.deathFunc, 7000);
+	  window.setTimeout(this.deathFunc, 5000);
 	};
 	
 	PlayerModel.prototype.addListeners = function () {
@@ -292,32 +297,32 @@
 	
 	
 	PlayerModel.prototype.drawPlayer = function (ctx) {
-	
+	  var pos = {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40};
 	  if (this.direction === "left") {
 	    if (this.jumpVelocity > 2){
-	      this.leftsit.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	      this.leftsit.render(ctx, pos);
 	    } else if (this.jumping){
-	      this.leftjump.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	      this.leftjump.render(ctx, pos);
 	    } else {
-	      this.leftsit.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	      this.leftsit.render(ctx, pos);
 	    }
 	  } else if (this.direction === "right") {
 	    if (this.jumpVelocity > 2){
-	      this.rightsit.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	      this.rightsit.render(ctx, pos);
 	    } else if (this.jumping){
-	      this.rightjump.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	      this.rightjump.render(ctx, pos);
 	    } else {
-	      this.rightsit.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	      this.rightsit.render(ctx, pos);
 	    }
 	  }
 	
-	  ctx.beginPath();
-	  ctx.arc(this.playerX, this.canvas.height-this.playerRadius + this.playerY , this.playerRadius, 0, Math.PI*2);
+	  // ctx.beginPath();
+	  // ctx.arc(this.playerX, this.canvas.height-this.playerRadius + this.playerY , this.playerRadius, 0, Math.PI*2);
 	  //ctx.fill();
 	  if (this.jumping === true){
 	    this.initiateJump();
 	  }
-	  ctx.closePath();
+	  // ctx.closePath();
 	};
 	
 	
@@ -346,6 +351,18 @@
 		this.rightjump = new Image();
 		this.rightjump.src = "./images/rightjump.png";
 	
+		this.apple = new Image();
+		this.apple.src = "./images/apple.png";
+	
+		this.avacado = new Image();
+		this.avacado.src = "./images/avacado.png";
+	
+		this.broc = new Image();
+		this.broc.src = "./images/broc.png";
+	
+		this.pear = new Image();
+		this.pear.src = "./images/pear.png";
+	
 		this.sprite = function (options) {
 	
 	    var that = {};
@@ -369,6 +386,8 @@
 	    };
 	    return that;
 		};
+	
+		this.fruits = [this.avacado, this.pear, this.broc, this.apple];
 	};
 	
 	
@@ -380,18 +399,60 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Sounds = __webpack_require__(4);
+	var Images = __webpack_require__(2);
+	var imageStore = new Images();
 	
 	var soundStore = new Sounds();
 	
-	var BellModel = function(canvas) {
-	  this.radius = 15;
+	var BellModel = function(canvas, score) {
+	
+	  if (score < 1000) {
+	    this.radius = 28;
+	  } else if (score < 5000) {
+	    this.radius = 24;
+	  } else if (score < 9000) {
+	    this.radius = 20;
+	  } else if (score < 14000) {
+	    this.radius = 16;
+	  } else if (score > 14000) {
+	    this.radius = 12;
+	  }
+	
+	
+	
 	  this.chime = soundStore.chime;
 	  this.canvas = canvas;
 	  this.y = -100;
-	  this.fallSpeed = 1;
+	  this.fallSpeed = 1.3;
 	  // this.shifting = false;
-	  this.shiftVelocity = 3.0;
+	  this.shiftVelocity = 4.0;
 	  this.x = (Math.random() * this.canvas.width);
+	  this.fruit = imageStore.fruits[Math.floor(Math.random() * imageStore.fruits.length)];
+	
+	  this.fruitSprite = imageStore.sprite({
+	    width: this.radius * 2.5,
+	    height: this.radius * 2.5,
+	    image: this.fruit,
+	  });
+	
+	  this.avacado = imageStore.sprite({
+	    width: this.radius * 2.5,
+	    height: this.radius * 2.5,
+	    image: imageStore.avacado,
+	  });
+	
+	  this.broc = imageStore.sprite({
+	    width: this.radius * 2.5,
+	    height: this.radius * 2.5,
+	    image: imageStore.broc,
+	  });
+	
+	  this.pear = imageStore.sprite({
+	    width: this.radius * 2.5,
+	    height: this.radius * 2.5,
+	    image: imageStore.pear,
+	  });
+	
 	};
 	
 	BellModel.prototype.startShift = function() {
@@ -405,13 +466,15 @@
 	};
 	
 	BellModel.prototype.drawBell = function (ctx) {
-	  ctx.beginPath();
-	  ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-	  ctx.fill();
+	  var pos = {y: this.y - this.radius, x: this.x - this.radius};
+	  this.fruitSprite.render(ctx, pos);
+	  // ctx.beginPath();
+	  // ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+	  // ctx.fill();
 	
 	    this.y += this.fallSpeed;
 	
-	  ctx.closePath();
+	  // ctx.closePath();
 	};
 	
 	
