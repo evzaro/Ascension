@@ -45,8 +45,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var PlayerModel = __webpack_require__(1);
-	var BellModel = __webpack_require__(2);
-	var Background = __webpack_require__(4);
+	var BellModel = __webpack_require__(3);
+	var Background = __webpack_require__(5);
 	
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
@@ -56,7 +56,7 @@
 	var currentBellPointVal = 10;
 	var bells = [];
 	
-	var Sounds = __webpack_require__(3);
+	var Sounds = __webpack_require__(4);
 	var soundStore = new Sounds();
 	soundStore.music.play();
 	
@@ -192,8 +192,11 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	var Images = __webpack_require__(2);
+	var imageStore = new Images();
+	
 	var PlayerModel = function(canvas, deathFunc) {
 	  this.canvas = canvas;
 	  this.playerRadius = 25;
@@ -205,9 +208,41 @@
 	  this.addListeners();
 	  this.dead = false;
 	  this.deathFunc = deathFunc;
+	
+	  this.leftsit = imageStore.sprite({
+	    width: 80,
+	    height: 80,
+	    image: imageStore.leftsit,
+	  });
+	
+	  this.leftjump = imageStore.sprite({
+	    width: 80,
+	    height: 80,
+	    image: imageStore.leftjump,
+	  });
+	
+	  this.rightsit = imageStore.sprite({
+	    width: 80,
+	    height: 80,
+	    image: imageStore.rightsit,
+	  });
+	
+	  this.rightjump = imageStore.sprite({
+	    width: 80,
+	    height: 80,
+	    image: imageStore.rightjump,
+	  });
+	
 	};
 	
+	
+	
 	handleMove = function (e) {
+	  if (e.movementX > 0){
+	    this.direction = "right";
+	  } else if (e.movementX < 0) {
+	    this.direction = "left";
+	  }
 	  this.playerX = e.pageX - this.canvas.offsetLeft - (this.playerRadius/2);
 	};
 	
@@ -258,24 +293,93 @@
 	
 	PlayerModel.prototype.drawPlayer = function (ctx) {
 	
+	  if (this.direction === "left") {
+	    if (this.jumpVelocity > 2){
+	      this.leftsit.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	    } else if (this.jumping){
+	      this.leftjump.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	    } else {
+	      this.leftsit.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	    }
+	  } else if (this.direction === "right") {
+	    if (this.jumpVelocity > 2){
+	      this.rightsit.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	    } else if (this.jumping){
+	      this.rightjump.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	    } else {
+	      this.rightsit.render(ctx, {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40});
+	    }
+	  }
 	
 	  ctx.beginPath();
 	  ctx.arc(this.playerX, this.canvas.height-this.playerRadius + this.playerY , this.playerRadius, 0, Math.PI*2);
-	  ctx.fill();
+	  //ctx.fill();
 	  if (this.jumping === true){
 	    this.initiateJump();
 	  }
 	  ctx.closePath();
 	};
 	
+	
+	
 	module.exports = PlayerModel;
 
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	var Images = function() {
+	
+		this.background = new Image();
+		this.background.src = "./images/bg.png";
+		// this.left = new Image();
+		// this.left.src = "./images/leftsprite.png";
+		this.leftsit = new Image();
+		this.leftsit.src = "./images/leftsit.png";
+		this.leftjump = new Image();
+		this.leftjump.src = "./images/leftjump.png";
+		// this.right = new Image();
+		// this.right.src = "./images/rightsprite.png";
+		this.rightsit = new Image();
+		this.rightsit.src = "./images/rightsit.png";
+		this.rightjump = new Image();
+		this.rightjump.src = "./images/rightjump.png";
+	
+		this.sprite = function (options) {
+	
+	    var that = {};
+	
+	    that.context = options.context;
+	    that.width = options.width;
+	    that.height = options.height;
+	    that.image = options.image;
+			that.render = function (ctx, options) {
+	       ctx.drawImage(
+	         that.image,
+	       		options.x,
+	       		options.y,
+	       		that.width,
+	        	that.height
+	      //  50,
+	      //  50,
+	      //  options.width,
+	      //  options.height
+					);
+	    };
+	    return that;
+		};
+	};
+	
+	
+	module.exports = Images;
+
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Sounds = __webpack_require__(3);
+	var Sounds = __webpack_require__(4);
 	
 	var soundStore = new Sounds();
 	
@@ -315,7 +419,7 @@
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	var Sounds = function() {
@@ -332,10 +436,10 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Images = __webpack_require__(5);
+	var Images = __webpack_require__(2);
 	
 	var imageStore = new Images();
 	function Background() {
@@ -360,19 +464,6 @@
 	}
 	
 	module.exports = Background;
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	var Images = function() {
-	
-		this.background = new Image();
-		this.background.src = "./images/bg.png";
-	};
-	
-	module.exports = Images;
 
 
 /***/ }
