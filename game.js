@@ -126,7 +126,7 @@
 	    }
 	  }
 	
-	  if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.3){
+	  if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.27){
 	
 	    player.jumpVelocity = player.jumpVelocity/1.3;
 	    bells.forEach(function(bell){
@@ -425,7 +425,7 @@
 	  this.y = -100;
 	  this.fallSpeed = 1.3;
 	  // this.shifting = false;
-	  this.shiftVelocity = 4.0;
+	  this.shiftVelocity = 4.5;
 	  this.x = (Math.random() * this.canvas.width);
 	  this.fruit = imageStore.fruits[Math.floor(Math.random() * imageStore.fruits.length)];
 	
