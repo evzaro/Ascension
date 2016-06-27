@@ -57,6 +57,9 @@
 	var currentBellPointVal = 10;
 	var bells = [];
 	
+	var Images = __webpack_require__(2);
+	var imageStore = new Images();
+	
 	var Sounds = __webpack_require__(4);
 	var soundStore = new Sounds();
 	soundStore.music.play();
@@ -73,7 +76,6 @@
 	  	bells.push(new BellModel(canvas, score));
 		}
 	};
-	
 	
 	function handleScore (){
 	  score += currentBellPointVal;
@@ -137,6 +139,7 @@
 	      bell.endShift();
 	    });
 	  }
+	ctx.font = "15px comic-sans";
 	ctx.fillText(score, 5, 15);
 	}
 	
@@ -154,19 +157,12 @@
 		bells = [];
 		background.falling = false;
 		background.panningSpeed = 0.6;
-		//refactor
 	}
 	
 	function drawIntro() {
-			ctx.fillStyle = 'black';
-	    ctx.fillRect(0,0,canvas.width, canvas.height);
-			ctx.fillStyle = 'white';
-			ctx.font = "70px comic-sans";
-			ctx.fillText("Bunny Munchies", 150, 55);
-			ctx.font = "30px comic-sans";
-		  ctx.fillText("Try to get the high-score by eating all the fruits and veggies!", 15, 200);
-			ctx.font = "20px comic-sans";
-			ctx.fillText("Click anywhere to begin", 80, 300);
+		imageStore.splash.onload = function() {
+		ctx.drawImage(imageStore.splash, 0,0);
+		};
 	}
 	
 	function drawGameOver() {
@@ -182,7 +178,6 @@
 	
 			ctx.font = "15px comic-sans";
 			ctx.fillText("Click anywhere to try again", 35, 300);
-	
 	}
 	
 	drawIntro();
@@ -362,6 +357,9 @@
 	
 		this.pear = new Image();
 		this.pear.src = "./images/pear.png";
+	
+		this.splash = new Image();
+		this.splash.src = "./images/splash.png";
 	
 		this.sprite = function (options) {
 	
