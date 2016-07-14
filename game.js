@@ -55,7 +55,8 @@
 	var score = 0;
 	var high_score = 0;
 	var currentBellPointVal = 10;
-	var bells = [];
+	var bells = {};
+	var bell_num = 0;
 	
 	var Images = __webpack_require__(2);
 	var imageStore = new Images();
@@ -73,7 +74,8 @@
 	
 	var makeNewBell = function () {
 		if (player.dead === false) {
-	  	bells.push(new BellModel(canvas, score));
+	  	bells[bell_num]=(new BellModel(canvas, score));
+			bell_num += 1;
 		}
 	};
 	
@@ -103,16 +105,17 @@
 	  ctx.fillText(score, 5, 15);
 	  player.drawPlayer(ctx);
 	
-	  for (var i = 0; i < bells.length; i++) {
+		Object.keys(bells).forEach(function(bell_num){
 	
-	    if (bells[i].y > 500 + bells[i].radius) {
-	      bells.splice(i, 1); //clear bell when off screen
-	    } else {
+	
+			if (bells[bell_num].y > 500 + bells[bell_num].radius) {
+				delete bells[bell_num];
+			} else {
+				bells[bell_num].drawBell(ctx);
 				if (player.dead === false){
-		      bells[i].drawBell(ctx);
-		      if (checkCollision(bells[i])){
+		      if (checkCollision(bells[bell_num])){
 						player.startedAscent = true;
-		        bells.splice(i, 1);
+		        delete bells[bell_num];
 		        if ( (canvas.height-player.playerRadius + player.playerY) > canvas.height * 0.3){
 		          player.handleJump();
 		        }
@@ -121,24 +124,61 @@
 					if (player.playerY > -220){
 						player.playerY += -0.15;
 					}
-					bells[i].fallSpeed = -5;
-					bells[i].drawBell(ctx);
+					bells[bell_num].fallSpeed = -5;
 					background.falling = true;
 				}
-	    }
-	  }
+			}
+		});
 	
-	  if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.27){
+		// if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.27){
+		//
+	  //   player.jumpVelocity = player.jumpVelocity/1.3;
+	  //   Object.keys(bells).forEach(function(bell_num){
+	  //     bells[bell_num].startShift();
+	  //   });
+	  // } else {
+	  //   Object.keys(bells).forEach(function(bell_num){
+	  //     bells[bell_num].endShift();
+	  //   });
+	  // }
 	
-	    player.jumpVelocity = player.jumpVelocity/1.3;
-	    bells.forEach(function(bell){
-	      bell.startShift();
-	    });
-	  } else {
-	    bells.forEach(function(bell){
-	      bell.endShift();
-	    });
-	  }
+	  // for (var i = 0; i < bells.length; i++) {
+		//
+	  //    if (bells[i].y > 500 + bells[i].radius) {
+	  //     bells.pop(); //clear bell when off screen
+	  //   } else {
+		// 		if (player.dead === false){
+		//       bells[i].drawBell(ctx);
+		//       if (checkCollision(bells[i])){
+		// 				player.startedAscent = true;
+		//         bells.splice(i, 1);
+		//         if ( (canvas.height-player.playerRadius + player.playerY) > canvas.height * 0.3){
+		//           player.handleJump();
+		//         }
+		//       }
+		// 		} else {
+		// 			if (player.playerY > -220){
+		// 				player.playerY += -0.15;
+		// 			}
+		// 			bells[i].fallSpeed = -5;
+		// 			bells[i].drawBell(ctx);
+		// 			background.falling = true;
+		// 		}
+	  //    }
+	  // }
+		//
+	  // if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.27){
+		//
+	  //   player.jumpVelocity = player.jumpVelocity/1.3;
+	  //   bells.forEach(function(bell){
+	  //     bell.startShift();
+	  //   });
+	  // } else {
+	  //   bells.forEach(function(bell){
+	  //     bell.endShift();
+	  //   });
+	  // }
+	
 	ctx.font = "15px comic-sans";
 	ctx.fillText(score, 5, 15);
 	}
