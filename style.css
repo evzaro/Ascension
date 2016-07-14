@@ -2,7 +2,7 @@ canvas {
   padding: 5px;
   border: 5px solid black;
   display: block;
-  margin: auto;
+
   cursor: none;
   background: transparent;
   position: absolute;
@@ -10,4 +10,28 @@ canvas {
   margin-right: auto;
   left: 0;
   right: 0;
+}
+
+.creator-info {
+  position: absolute;
+  display: block;
+  left: 0;
+  right: 0;
+
+  top: 530px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 770px;
+}
+
+.creator-info a{
+  float: left;
+  padding-top: 5px;
+  padding-right: 15px;
+  cursor: pointer;
+}
+
+.creator-info span{
+  float: right;
+  padding-top: 5px;
 }
