@@ -107,8 +107,9 @@
 	
 		Object.keys(bells).forEach(function(bell_num){
 	
-	
-			if (bells[bell_num].y > 500 + bells[bell_num].radius) {
+			if (player.startedAscent === true && bells[bell_num].y > 500 + bells[bell_num].radius) {
+				delete bells[bell_num];
+			} else if (player.startedAscent === false && bells[bell_num].y > 300 + bells[bell_num].radius) {
 				delete bells[bell_num];
 			} else {
 				bells[bell_num].drawBell(ctx);
@@ -118,8 +119,15 @@
 		        delete bells[bell_num];
 		        if ( (canvas.height-player.playerRadius + player.playerY) > canvas.height * 0.3){
 		          player.handleJump();
-		        }
-		      }
+						} else {
+							player.handleJump();
+							// var timers = [];
+							// Object.keys(bells).forEach(function(bell_num){
+							//     bells[bell_num].startShift();
+							// 		window.setTimeout(bells[bell_num].endShift, 50);
+							// });
+						}
+					}
 				} else {
 					if (player.playerY > -220){
 						player.playerY += -0.15;
@@ -206,7 +214,7 @@
 	}
 	
 	function drawGameOver() {
-			ctx.fillStyle = 'black';
+			ctx.fillStyle = '#000033';
 	    ctx.fillRect(0,0,canvas.width, canvas.height);
 			ctx.fillStyle = 'white';
 			ctx.font = "70px comic-sans";
@@ -334,7 +342,7 @@
 	PlayerModel.prototype.drawPlayer = function (ctx) {
 	  var pos = {y: this.canvas.height-this.playerRadius + this.playerY - 45, x: this.playerX - 40};
 	  if (this.direction === "left") {
-	    if (this.jumpVelocity > 2){
+	    if (this.jumpVelocity > 1){
 	      this.leftsit.render(ctx, pos);
 	    } else if (this.jumping){
 	      this.leftjump.render(ctx, pos);
@@ -342,7 +350,7 @@
 	      this.leftsit.render(ctx, pos);
 	    }
 	  } else if (this.direction === "right") {
-	    if (this.jumpVelocity > 2){
+	    if (this.jumpVelocity > 1){
 	      this.rightsit.render(ctx, pos);
 	    } else if (this.jumping){
 	      this.rightjump.render(ctx, pos);
@@ -461,9 +469,9 @@
 	  this.chime = soundStore.chime;
 	  this.canvas = canvas;
 	  this.y = -100;
-	  this.fallSpeed = 1.3;
+	  this.fallSpeed = 1.0;
 	  // this.shifting = false;
-	  this.shiftVelocity = 4.5;
+	  this.shiftVelocity = 2.5;
 	  this.x = (Math.random() * this.canvas.width);
 	  this.fruit = imageStore.fruits[Math.floor(Math.random() * imageStore.fruits.length)];
 	
@@ -496,11 +504,14 @@
 	BellModel.prototype.startShift = function() {
 	  // this.shifting = true;
 	  this.fallSpeed = this.shiftVelocity;
+	  // console.log("starting");
 	};
 	
 	BellModel.prototype.endShift = function() {
 	  // this.shifting = false;
-	  this.fallSpeed = 1;
+	  // console.log("ending");
+	  // this.fallSpeed = 1;
+	  // console.log(this.fallSpeed);
 	};
 	
 	BellModel.prototype.drawBell = function (ctx) {
