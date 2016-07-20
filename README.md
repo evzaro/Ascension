@@ -2,7 +2,7 @@
 
 # Ascension #
 
-![](images/splash)
+![](images/splash.png)
 
 Ascension is a soothing, yet difficult 'platform jumper' type game roughly based on 'Winter Bells'.
 It becomes increasingly challenging as the player progresses.
@@ -16,7 +16,7 @@ Ascension was built with HTML5 canvas and JavaScript.
 
 ### Gameplay ###
 
-![](images/screen)
+![](images/screen.png)
 
 * Simply use your mouse or trackpad to move the bunny left and right. When on the ground, click to jump.
 * Continue your ascent and increase your score by hopping on fruits and veggies.
