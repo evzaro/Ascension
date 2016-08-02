@@ -2,7 +2,7 @@
 
 # Ascension #
 
-![](images/splash.png)
+![](images/title.png)
 
 Ascension is a soothing, yet difficult 'platform jumper' type game roughly based on 'Winter Bells'.
 It becomes increasingly challenging as the player progresses.
