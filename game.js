@@ -109,25 +109,32 @@
 	
 			if (player.startedAscent === true && bells[bell_num].y > 500 + bells[bell_num].radius) {
 				delete bells[bell_num];
-			} else if (player.startedAscent === false && bells[bell_num].y > 300 + bells[bell_num].radius) {
+			} else if (player.startedAscent === false && bells[bell_num].y > 320 + bells[bell_num].radius) {
 				delete bells[bell_num];
 			} else {
 				bells[bell_num].drawBell(ctx);
+	
 				if (player.dead === false){
 		      if (checkCollision(bells[bell_num])){
 						player.startedAscent = true;
 		        delete bells[bell_num];
-		        if ( (canvas.height-player.playerRadius + player.playerY) > canvas.height * 0.3){
+		        if ( player.playerY > -370){
 		          player.handleJump();
-						} else {
-							player.handleJump();
-							// var timers = [];
-							// Object.keys(bells).forEach(function(bell_num){
-							//     bells[bell_num].startShift();
-							// 		window.setTimeout(bells[bell_num].endShift, 50);
-							// });
 						}
+						// else {
+						// 	shiftBells();
+						// }
 					}
+	
+					if ( player.playerY < -370) {
+						player.playerY = -370;
+						Object.keys(bells).forEach(function(bell_num){
+							bells[bell_num].shift();
+							console.log(player.jumpVelocity);
+							miniShiftTimer = window.setTimeout(unshiftBells, 600);
+						});
+					}
+	
 				} else {
 					if (player.playerY > -220){
 						player.playerY += -0.15;
@@ -138,54 +145,19 @@
 			}
 		});
 	
-		// if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.27){
-		//
-	  //   player.jumpVelocity = player.jumpVelocity/1.3;
-	  //   Object.keys(bells).forEach(function(bell_num){
-	  //     bells[bell_num].startShift();
-	  //   });
-	  // } else {
-	  //   Object.keys(bells).forEach(function(bell_num){
-	  //     bells[bell_num].endShift();
-	  //   });
-	  // }
+		function shiftBells (){
+			Object.keys(bells).forEach(function(bell_num){
+				bells[bell_num].fallSpeed -= player.jumpVelocity;
+				 shiftTimer = window.setTimeout(unshiftBells, 500);
+			});
+		}
 	
-	  // for (var i = 0; i < bells.length; i++) {
-		//
-	  //    if (bells[i].y > 500 + bells[i].radius) {
-	  //     bells.pop(); //clear bell when off screen
-	  //   } else {
-		// 		if (player.dead === false){
-		//       bells[i].drawBell(ctx);
-		//       if (checkCollision(bells[i])){
-		// 				player.startedAscent = true;
-		//         bells.splice(i, 1);
-		//         if ( (canvas.height-player.playerRadius + player.playerY) > canvas.height * 0.3){
-		//           player.handleJump();
-		//         }
-		//       }
-		// 		} else {
-		// 			if (player.playerY > -220){
-		// 				player.playerY += -0.15;
-		// 			}
-		// 			bells[i].fallSpeed = -5;
-		// 			bells[i].drawBell(ctx);
-		// 			background.falling = true;
-		// 		}
-	  //    }
-	  // }
-		//
-	  // if ( (canvas.height-player.playerRadius + player.playerY) <= canvas.height * 0.27){
-		//
-	  //   player.jumpVelocity = player.jumpVelocity/1.3;
-	  //   bells.forEach(function(bell){
-	  //     bell.startShift();
-	  //   });
-	  // } else {
-	  //   bells.forEach(function(bell){
-	  //     bell.endShift();
-	  //   });
-	  // }
+		function unshiftBells (){
+				Object.keys(bells).forEach(function(bell_num){
+					bells[bell_num].fallSpeed = 1.2;
+				});
+		}
+	
 	
 	ctx.font = "15px comic-sans";
 	ctx.fillText(score, 5, 15);
@@ -217,12 +189,13 @@
 			ctx.fillStyle = '#000033';
 	    ctx.fillRect(0,0,canvas.width, canvas.height);
 			ctx.fillStyle = 'white';
+	
 			ctx.font = "70px comic-sans";
 			ctx.fillText("GAME OVER", 150, 55);
+	
 			ctx.font = "30px comic-sans";
 			ctx.fillText("Your score: " + score, 35, 140);
 			ctx.fillText("Your high score: " + high_score, 35, 180);
-			ctx.font = "30px comic-sans";
 	
 			ctx.font = "15px comic-sans";
 			ctx.fillText("Click anywhere to try again", 35, 300);
@@ -251,7 +224,7 @@
 	  this.playerY = 0;
 	  this.playerX = (this.canvas.width - this.playerRadius)/2;
 	  this.jumping = false;
-	  this.jumpVelocity = -4.5;
+	  this.jumpVelocity = -5;
 	  this.startedAscent = false;
 	  this.addListeners();
 	  this.dead = false;
@@ -359,13 +332,10 @@
 	    }
 	  }
 	
-	  // ctx.beginPath();
-	  // ctx.arc(this.playerX, this.canvas.height-this.playerRadius + this.playerY , this.playerRadius, 0, Math.PI*2);
-	  //ctx.fill();
 	  if (this.jumping === true){
 	    this.initiateJump();
 	  }
-	  // ctx.closePath();
+	
 	};
 	
 	
@@ -469,7 +439,7 @@
 	  this.chime = soundStore.chime;
 	  this.canvas = canvas;
 	  this.y = -100;
-	  this.fallSpeed = 1.0;
+	  this.fallSpeed = 1.2;
 	  // this.shifting = false;
 	  this.shiftVelocity = 2.5;
 	  this.x = (Math.random() * this.canvas.width);
@@ -517,13 +487,7 @@
 	BellModel.prototype.drawBell = function (ctx) {
 	  var pos = {y: this.y - this.radius, x: this.x - this.radius};
 	  this.fruitSprite.render(ctx, pos);
-	  // ctx.beginPath();
-	  // ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-	  // ctx.fill();
-	
 	    this.y += this.fallSpeed;
-	
-	  // ctx.closePath();
 	};
 	
 	
